@@ -1,70 +1,96 @@
-# Getting Started with Create React App
+# Sistema Odontológico
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Sistema completo para gestão de clínicas odontológicas, incluindo interfaces para dentistas, técnicos em saúde bucal (TSB), pacientes e recursos humanos (RH).
 
-## Available Scripts
+## Características
 
-In the project directory, you can run:
+- **Interface Múltipla**: Sistema distribuído em diferentes portas para cada tipo de usuário
+- **Design Responsivo**: Interface baseada em Tailwind CSS, adaptável a diferentes dispositivos
+- **Persistência de Dados**: Armazenamento em localStorage para demonstração
+- **Gestão de Pacientes**: Cadastro, fila de atendimento e histórico
+- **Gestão de Profissionais**: Cadastro, controle de ponto e escalas
+- **Notificações em Tempo Real**: Sistema de notificações para novos pacientes
+- **Backup e Restauração**: Módulo para exportação e importação de dados
 
-### `npm start`
+## Interfaces
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Menu Principal**: http://localhost:3000
+- **Interface do Dentista**: http://localhost:3001
+- **Interface do TSB**: http://localhost:3002
+- **Interface do Paciente**: http://localhost:3003
+- **Interface do RH**: http://localhost:3004
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Credenciais para Teste
 
-### `npm test`
+- **Dentista**: Email: `marcos@clinica.com` / Senha: `dentista123`
+- **TSB**: Email: `juliana@clinica.com` / Senha: `tsb123`
+- **RH**: Email: `admin@clinica.com` / Senha: `admin123`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tecnologias Utilizadas
 
-### `npm run build`
+- **Frontend**: React 19.1.0, Tailwind CSS
+- **Iconografia**: Lucide React
+- **Persistência**: localStorage (para demonstração)
+- **Serviços Paralelos**: Concurrently para execução de múltiplas instâncias
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Instalação
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone o repositório:
+```bash
+git clone [URL-DO-REPOSITORIO]
+cd sistema-odontologico
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Instale as dependências:
+```bash
+npm install
+```
 
-### `npm run eject`
+3. Inicie o sistema completo:
+```bash
+npm run start-all
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Ou inicie interfaces específicas:
+```bash
+npm run start-menu      # Menu principal (porta 3000)
+npm run start-dentista  # Interface do dentista (porta 3001)
+npm run start-tsb       # Interface do TSB (porta 3002)
+npm run start-paciente  # Interface do paciente (porta 3003)
+npm run start-rh        # Interface do RH (porta 3004)
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Funcionalidades Principais
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Interface do Dentista
+- Visualização de ficha do paciente
+- Registro de procedimentos
+- Prescrição de medicamentos
+- Anotações clínicas
+- Confirmação de atendimentos
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Interface do TSB
+- Gestão da fila de pacientes
+- Triagem e classificação de urgência
+- Encaminhamento para dentistas
+- Controle de atendimentos
 
-## Learn More
+### Interface do Paciente
+- Auto-registro no sistema
+- Preenchimento de anamnese
+- Descrição da queixa principal
+- Acompanhamento de posição na fila
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Interface do RH
+- Cadastro de funcionários
+- Controle de ponto
+- Gerenciamento de escalas
+- Sistema de backup e restauração
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Contribuição
 
-### Code Splitting
+Contribuições são bem-vindas! Por favor, sinta-se à vontade para submeter pull requests.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Licença
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.

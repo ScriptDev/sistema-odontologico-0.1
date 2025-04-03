@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#2563eb" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Sistema de Atendimento Odontológico"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -24,10 +24,43 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Sistema Odontológico</title>
+    <script>
+      // Script para redirecionar para as páginas HTML específicas 
+      // se a aplicação React não carregar em 5 segundos
+      window.onload = function() {
+        console.log("Página carregada, verificando porta e conteúdo...");
+        setTimeout(function() {
+          const rootElement = document.getElementById('root');
+          const port = window.location.port || '3000';
+          
+          console.log("Verificando conteúdo do root:", {
+            rootVazio: rootElement.children.length === 0,
+            porta: port
+          });
+          
+          // Se o root estiver vazio, redirecionar para a página HTML específica
+          if (rootElement.children.length === 0) {
+            console.log("Root vazio, redirecionando...");
+            
+            if (port === '3000') {
+              window.location.href = '/menu.html';
+            } else if (port === '3001') {
+              window.location.href = '/dentista.html';
+            } else if (port === '3002') {
+              window.location.href = '/tsb.html';
+            } else if (port === '3003') {
+              window.location.href = '/paciente.html';
+            } else if (port === '3004') {
+              window.location.href = '/rh.html';
+            }
+          }
+        }, 5000); // Esperar 5 segundos (aumentado de 2 para 5)
+      };
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>Você precisa habilitar o JavaScript para usar este aplicativo.</noscript>
     <div id="root"></div>
     <!--
       This HTML file is a template.

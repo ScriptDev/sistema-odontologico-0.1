@@ -7,13 +7,20 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "lucide-react": "^0.487.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3000 && react-scripts start",
+    "start-menu": "set PORT=3000 && react-scripts start",
+    "start-dentista": "set PORT=3001 && react-scripts start",
+    "start-tsb": "set PORT=3002 && react-scripts start",
+    "start-paciente": "set PORT=3003 && react-scripts start",
+    "start-rh": "set PORT=3004 && react-scripts start",
+    "start-all": "concurrently \"npm run start-menu\" \"npm run start-dentista\" \"npm run start-tsb\" \"npm run start-paciente\" \"npm run start-rh\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -35,5 +42,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "concurrently": "^9.1.2",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2"
   }
 }
