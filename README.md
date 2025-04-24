@@ -1,43 +1,37 @@
 # Sistema Odontológico
 
-Sistema completo para gestão de clínicas odontológicas, incluindo interfaces para dentistas, técnicos em saúde bucal (TSB), pacientes e recursos humanos (RH).
+Sistema de gestão para clínicas odontológicas, com módulos para pacientes, dentistas, TSB (Técnicos em Saúde Bucal) e RH.
+
+## Telas do Sistema
+
+O sistema possui quatro interfaces principais:
+
+1. **Painel do Paciente** - Interface principal para acompanhamento de consultas, histórico e agendamentos
+2. **Painel do Dentista** - Gerenciamento de atendimentos, prontuários e procedimentos
+3. **Painel do TSB** - Preparação de salas, assistência e organização de materiais
+4. **Painel do RH** - Gestão de funcionários, escala de trabalho e ponto eletrônico
 
 ## Características
 
-- **Interface Múltipla**: Sistema distribuído em diferentes portas para cada tipo de usuário
-- **Design Responsivo**: Interface baseada em Tailwind CSS, adaptável a diferentes dispositivos
-- **Persistência de Dados**: Armazenamento em localStorage para demonstração
-- **Gestão de Pacientes**: Cadastro, fila de atendimento e histórico
-- **Gestão de Profissionais**: Cadastro, controle de ponto e escalas
-- **Notificações em Tempo Real**: Sistema de notificações para novos pacientes
-- **Backup e Restauração**: Módulo para exportação e importação de dados
-
-## Interfaces
-
-- **Menu Principal**: http://localhost:3000
-- **Interface do Dentista**: http://localhost:3001
-- **Interface do TSB**: http://localhost:3002
-- **Interface do Paciente**: http://localhost:3003
-- **Interface do RH**: http://localhost:3004
-
-## Credenciais para Teste
-
-- **Dentista**: Email: `marcos@clinica.com` / Senha: `dentista123`
-- **TSB**: Email: `juliana@clinica.com` / Senha: `tsb123`
-- **RH**: Email: `admin@clinica.com` / Senha: `admin123`
+- Autenticação e controle de acesso por perfil
+- Sistema responsivo para uso em diferentes dispositivos
+- Armazenamento local via localStorage (para fins de demonstração)
+- Notificações em tempo real
+- Gestão de ponto eletrônico
+- Backup e restauração de dados
 
 ## Tecnologias Utilizadas
 
-- **Frontend**: React 19.1.0, Tailwind CSS
-- **Iconografia**: Lucide React
-- **Persistência**: localStorage (para demonstração)
-- **Serviços Paralelos**: Concurrently para execução de múltiplas instâncias
+- React.js
+- Tailwind CSS
+- Lucide Icons
+- Armazenamento local (localStorage)
 
 ## Instalação
 
 1. Clone o repositório:
 ```bash
-git clone [URL-DO-REPOSITORIO]
+git clone https://github.com/seu-usuario/sistema-odontologico.git
 cd sistema-odontologico
 ```
 
@@ -46,51 +40,65 @@ cd sistema-odontologico
 npm install
 ```
 
-3. Inicie o sistema completo:
+3. Inicie o servidor de desenvolvimento:
 ```bash
-npm run start-all
+npm start
 ```
 
-Ou inicie interfaces específicas:
-```bash
-npm run start-menu      # Menu principal (porta 3000)
-npm run start-dentista  # Interface do dentista (porta 3001)
-npm run start-tsb       # Interface do TSB (porta 3002)
-npm run start-paciente  # Interface do paciente (porta 3003)
-npm run start-rh        # Interface do RH (porta 3004)
+4. Acesse no navegador:
+```
+http://localhost:3000
 ```
 
-## Funcionalidades Principais
+## Usuários de Teste
 
-### Interface do Dentista
-- Visualização de ficha do paciente
+Para facilitar os testes, o sistema já vem com os seguintes usuários pré-cadastrados:
+
+| Tipo     | Email                | Senha       |
+|----------|----------------------|-------------|
+| RH       | admin@clinica.com    | admin123    |
+| Dentista | marcos@clinica.com   | dentista123 |
+| TSB      | juliana@clinica.com  | tsb123      |
+
+## Funcionamento
+
+### Fluxo de Acesso
+
+1. O sistema inicia na tela de login
+2. Após autenticação, o usuário é direcionado à interface correspondente ao seu perfil
+3. O administrador (RH) tem acesso a todas as áreas do sistema
+4. Usuários com permissões podem alternar entre as interfaces disponíveis
+
+### Módulos
+
+#### Painel do Paciente
+- Consulta de agendamentos
+- Histórico de atendimentos
+- Atualização de dados cadastrais
+
+#### Painel do Dentista
+- Visualização de agenda do dia
 - Registro de procedimentos
-- Prescrição de medicamentos
-- Anotações clínicas
-- Confirmação de atendimentos
+- Gerenciamento de prontuários
 
-### Interface do TSB
-- Gestão da fila de pacientes
-- Triagem e classificação de urgência
-- Encaminhamento para dentistas
-- Controle de atendimentos
+#### Painel do TSB
+- Preparação de materiais
+- Assistência aos dentistas
+- Gerenciamento de estoque
 
-### Interface do Paciente
-- Auto-registro no sistema
-- Preenchimento de anamnese
-- Descrição da queixa principal
-- Acompanhamento de posição na fila
-
-### Interface do RH
+#### Painel do RH
 - Cadastro de funcionários
 - Controle de ponto
-- Gerenciamento de escalas
-- Sistema de backup e restauração
+- Gestão de escalas de trabalho
 
 ## Contribuição
 
-Contribuições são bem-vindas! Por favor, sinta-se à vontade para submeter pull requests.
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
+Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para mais detalhes.

@@ -4,7 +4,7 @@ import Login from './Login';
 import authService from '../services/AuthService';
 import NotificationCenter from './NotificationCenter';
 
-const InterfaceAtendente = () => {
+const InterfaceAtendente = ({ usuario, onLogout, onTrocarVisao }) => {
   // Estados para autenticação
   const [autenticado, setAutenticado] = useState(false);
   const [usuarioAtual, setUsuarioAtual] = useState(null);
@@ -236,20 +236,77 @@ const InterfaceAtendente = () => {
     }
   };
   
+  // Renderizar o cabeçalho com informações do usuário e opções
+  const renderCabecalho = () => {
+    if (!usuarioAtual) return null;
+
+    return (
+      <div className="cabecalho bg-white shadow-md p-4 flex justify-between items-center">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold text-blue-700 mr-4">Painel do TSB</h1>
+          {usuarioAtual && (
+            <span className="text-gray-600">
+              Bem-vindo, <strong>{usuarioAtual.nome}</strong>
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-4">
+          {/* Botões de acesso a outras interfaces */}
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600">Acessar:</span>
+            
+            <button 
+              onClick={() => onTrocarVisao('paciente')}
+              className="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded"
+            >
+              Paciente
+            </button>
+            
+            {usuarioAtual.tipo === 'dentista' && (
+              <button 
+                onClick={() => onTrocarVisao('dentista')}
+                className="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded"
+              >
+                Dentista
+              </button>
+            )}
+            
+            {usuarioAtual.tipo === 'rh' && (
+              <button 
+                onClick={() => onTrocarVisao('rh')}
+                className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded"
+              >
+                RH
+              </button>
+            )}
+          </div>
+          
+          {/* Botão de logout */}
+          <button 
+            onClick={() => {
+              handleLogout();
+              onLogout();
+            }}
+            className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded flex items-center gap-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 1 1 2 0v3a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3a1 1 0 1 1-2 0V4a1 1 0 0 0-1-1H3z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M13.293 8.293a1 1 0 0 1 1.414 0L17 10.586l-2.293 2.293a1 1 0 0 1-1.414-1.414L14.586 10l-1.293-1.293a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M10 10a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2h-6a1 1 0 0 1-1-1z" clipRule="evenodd" />
+            </svg>
+            Sair
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Se não estiver autenticado, mostra a tela de orientação e login
   if (!autenticado) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Cabeçalho */}
-        <header className="bg-white shadow-sm">
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div className="flex items-center">
-              <Activity className="h-8 w-8 text-blue-600 mr-2" />
-              <h1 className="text-2xl font-bold text-gray-800">Sistema Odontológico - TSB</h1>
-            </div>
-          </div>
-        </header>
-
+        {renderCabecalho()}
         <div className="flex flex-grow">
           {/* Conteúdo de orientações */}
           <div className="flex-grow p-8">
@@ -331,32 +388,7 @@ const InterfaceAtendente = () => {
   // A interface existente do TSB permanece a mesma quando autenticado
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Cabeçalho */}
-      <header className="bg-blue-700 text-white shadow-lg">
-        <div className="container mx-auto p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-semibold">Painel do Técnico de Saúde Bucal</h1>
-              <div className="ml-6 bg-blue-600 px-3 py-1 rounded-full flex items-center">
-                <Clock size={16} className="mr-1" />
-                <span className="font-medium">{currentTime.toLocaleTimeString()}</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button className="bg-blue-800 hover:bg-blue-900 px-4 py-2 rounded-lg flex items-center">
-                <Coffee size={18} className="mr-2" />
-                <span>Intervalo</span>
-              </button>
-              <button className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg flex items-center">
-                <LogOut size={18} className="mr-2" />
-                <span>Encerrar Turno</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Conteúdo principal */}
+      {renderCabecalho()}
       <main className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
         {/* Bloco de informações do atendente */}
         <div className="col-span-1 bg-white rounded-xl shadow-md overflow-hidden">
@@ -560,7 +592,10 @@ const InterfaceAtendente = () => {
           <div className="flex items-center space-x-2 ml-auto">
             <NotificationCenter />
             <button
-              onClick={handleLogout}
+              onClick={() => {
+                handleLogout();
+                onLogout();
+              }}
               className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded flex items-center"
             >
               <LogOut size={14} className="mr-1" />

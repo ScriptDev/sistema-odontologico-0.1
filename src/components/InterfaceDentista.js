@@ -8,7 +8,7 @@ import Login from './Login';
 import authService from '../services/AuthService';
 import NotificationCenter from './NotificationCenter';
 
-const InterfaceDentista = () => {
+const InterfaceDentista = ({ usuario, onLogout, onTrocarVisao }) => {
   // Estados para autenticação
   const [autenticado, setAutenticado] = useState(false);
   const [usuarioAtual, setUsuarioAtual] = useState(null);
@@ -344,6 +344,69 @@ const InterfaceDentista = () => {
     }, 2000);
   };
 
+  // Renderizar o cabeçalho com informações do usuário e opções
+  const renderCabecalho = () => {
+    if (!usuario) return null;
+
+    return (
+      <div className="cabecalho bg-white shadow-md p-4 flex justify-between items-center">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold text-indigo-700 mr-4">Painel do Dentista</h1>
+          {usuario && (
+            <span className="text-gray-600">
+              Bem-vindo, <strong>{usuario.nome}</strong>
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-4">
+          {/* Botões de acesso a outras interfaces */}
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600">Acessar:</span>
+            
+            <button 
+              onClick={() => onTrocarVisao('paciente')}
+              className="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded"
+            >
+              Paciente
+            </button>
+            
+            {usuario.tipo === 'tsb' && (
+              <button 
+                onClick={() => onTrocarVisao('tsb')}
+                className="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
+              >
+                TSB
+              </button>
+            )}
+            
+            {usuario.tipo === 'rh' && (
+              <button 
+                onClick={() => onTrocarVisao('rh')}
+                className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded"
+              >
+                RH
+              </button>
+            )}
+          </div>
+          
+          {/* Botão de logout */}
+          <button 
+            onClick={onLogout}
+            className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded flex items-center gap-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 1 1 2 0v3a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3a1 1 0 1 1-2 0V4a1 1 0 0 0-1-1H3z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M13.293 8.293a1 1 0 0 1 1.414 0L17 10.586l-2.293 2.293a1 1 0 0 1-1.414-1.414L14.586 10l-1.293-1.293a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M10 10a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2h-6a1 1 0 0 1-1-1z" clipRule="evenodd" />
+            </svg>
+            Sair
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Enquanto estiver carregando, mostrar tela de loading
   if (carregando) {
     return (
@@ -426,179 +489,158 @@ const InterfaceDentista = () => {
   }
   
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      {/* Cabeçalho */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-800">Interface do Dentista</h1>
-              <span className="ml-4 text-sm text-gray-500">
-                <Clock size={16} className="inline mr-1" />
-                {formatarData(currentTime)}
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-3 ml-auto">
-              <NotificationCenter />
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded flex items-center"
-              >
-                <LogOut size={14} className="mr-1" />
-                <span>Sair</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Conteúdo principal */}
-      <main className="flex-1 p-4 max-w-7xl mx-auto w-full">
-        {pacienteAtual ? (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            {/* Dados do paciente atual */}
-            <div className="p-4 bg-blue-50 border-b border-blue-100">
-              <div className="flex flex-col md:flex-row md:items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    Paciente: {pacienteAtual.nome} • {pacienteAtual.idade} anos
-                  </h2>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Queixa principal: {pacienteAtual.queixa}
-                  </p>
+    <div className="interface-dentista">
+      {renderCabecalho()}
+      <div className="conteudo-principal">
+        <div className="min-h-screen flex flex-col bg-gray-100">
+          {/* Conteúdo principal */}
+          <main className="flex-1 p-4 max-w-7xl mx-auto w-full">
+            {pacienteAtual ? (
+              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                {/* Dados do paciente atual */}
+                <div className="p-4 bg-blue-50 border-b border-blue-100">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-800">
+                        Paciente: {pacienteAtual.nome} • {pacienteAtual.idade} anos
+                      </h2>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Queixa principal: {pacienteAtual.queixa}
+                      </p>
+                    </div>
+                    <div className="mt-3 md:mt-0">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
+                        <Activity size={16} className="mr-1" />
+                        Tempo de espera: {pacienteAtual.tempoEspera} min
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-3 md:mt-0">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
-                    <Activity size={16} className="mr-1" />
-                    Tempo de espera: {pacienteAtual.tempoEspera} min
-                  </span>
+                
+                {/* Abas de navegação */}
+                <div className="border-b border-gray-200">
+                  <nav className="flex -mb-px">
+                    <button
+                      className={`py-4 px-6 text-center text-sm font-medium ${
+                        abaAtiva === 'historico'
+                          ? 'border-b-2 border-blue-500 text-blue-600'
+                          : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
+                      onClick={() => setAbaAtiva('historico')}
+                    >
+                      Histórico
+                    </button>
+                    <button
+                      className={`py-4 px-6 text-center text-sm font-medium ${
+                        abaAtiva === 'anotacoes'
+                          ? 'border-b-2 border-blue-500 text-blue-600'
+                          : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
+                      onClick={() => setAbaAtiva('anotacoes')}
+                    >
+                      Anotações
+                    </button>
+                    <button
+                      className={`py-4 px-6 text-center text-sm font-medium ${
+                        abaAtiva === 'receitas'
+                          ? 'border-b-2 border-blue-500 text-blue-600'
+                          : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
+                      onClick={() => setAbaAtiva('receitas')}
+                    >
+                      Receitas
+                    </button>
+                    <button
+                      className={`py-4 px-6 text-center text-sm font-medium ${
+                        abaAtiva === 'procedimentos'
+                          ? 'border-b-2 border-blue-500 text-blue-600'
+                          : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
+                      onClick={() => setAbaAtiva('procedimentos')}
+                    >
+                      Procedimentos
+                    </button>
+                  </nav>
+                </div>
+                
+                {/* Conteúdo da aba selecionada */}
+                <div className="p-4">
+                  {abaAtiva === 'historico' && (
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800 mb-4">Histórico do Paciente</h3>
+                      <p className="text-gray-600">
+                        Exibindo histórico para {pacienteAtual.nome}.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {abaAtiva === 'anotacoes' && (
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800 mb-4">Anotações Clínicas</h3>
+                      <p className="text-gray-600">
+                        Espaço para anotações sobre o atendimento de {pacienteAtual.nome}.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {abaAtiva === 'receitas' && (
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800 mb-4">Receituário</h3>
+                      <p className="text-gray-600">
+                        Criar receitas para {pacienteAtual.nome}.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {abaAtiva === 'procedimentos' && (
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800 mb-4">Procedimentos</h3>
+                      <p className="text-gray-600">
+                        Registro de procedimentos para {pacienteAtual.nome}.
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Rodapé da ficha */}
+                <div className="border-t border-gray-200 p-4 bg-gray-50 flex justify-between items-center">
+                  <button 
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center"
+                  >
+                    <PenTool size={18} className="mr-2" />
+                    <span>Finalizar Atendimento</span>
+                  </button>
+                  
+                  {proximoPaciente && (
+                    <div className="text-sm text-gray-600">
+                      <span className="font-medium">Próximo:</span> {proximoPaciente.nome} • 
+                      <span className={`ml-1 ${
+                        proximoPaciente.urgencia >= 4 ? 'text-red-600' : 'text-orange-600'
+                      }`}>
+                        Espera: {proximoPaciente.tempoEspera} min
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-            
-            {/* Abas de navegação */}
-            <div className="border-b border-gray-200">
-              <nav className="flex -mb-px">
-                <button
-                  className={`py-4 px-6 text-center text-sm font-medium ${
-                    abaAtiva === 'historico'
-                      ? 'border-b-2 border-blue-500 text-blue-600'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                  onClick={() => setAbaAtiva('historico')}
+            ) : (
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <h2 className="text-xl font-medium text-gray-800 mb-4">Nenhum paciente em atendimento</h2>
+                <p className="text-gray-600 mb-6">
+                  Aguardando a chegada de um novo paciente ou a seleção pela recepção.
+                </p>
+                <button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center"
+                  onClick={carregarDadosSimulados}
                 >
-                  Histórico
+                  <Plus size={18} className="mr-2" />
+                  <span>Carregar Dados de Teste</span>
                 </button>
-                <button
-                  className={`py-4 px-6 text-center text-sm font-medium ${
-                    abaAtiva === 'anotacoes'
-                      ? 'border-b-2 border-blue-500 text-blue-600'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                  onClick={() => setAbaAtiva('anotacoes')}
-                >
-                  Anotações
-                </button>
-                <button
-                  className={`py-4 px-6 text-center text-sm font-medium ${
-                    abaAtiva === 'receitas'
-                      ? 'border-b-2 border-blue-500 text-blue-600'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                  onClick={() => setAbaAtiva('receitas')}
-                >
-                  Receitas
-                </button>
-                <button
-                  className={`py-4 px-6 text-center text-sm font-medium ${
-                    abaAtiva === 'procedimentos'
-                      ? 'border-b-2 border-blue-500 text-blue-600'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                  onClick={() => setAbaAtiva('procedimentos')}
-                >
-                  Procedimentos
-                </button>
-              </nav>
-            </div>
-            
-            {/* Conteúdo da aba selecionada */}
-            <div className="p-4">
-              {abaAtiva === 'historico' && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-4">Histórico do Paciente</h3>
-                  <p className="text-gray-600">
-                    Exibindo histórico para {pacienteAtual.nome}.
-                  </p>
-                </div>
-              )}
-              
-              {abaAtiva === 'anotacoes' && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-4">Anotações Clínicas</h3>
-                  <p className="text-gray-600">
-                    Espaço para anotações sobre o atendimento de {pacienteAtual.nome}.
-                  </p>
-                </div>
-              )}
-              
-              {abaAtiva === 'receitas' && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-4">Receituário</h3>
-                  <p className="text-gray-600">
-                    Criar receitas para {pacienteAtual.nome}.
-                  </p>
-                </div>
-              )}
-              
-              {abaAtiva === 'procedimentos' && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-4">Procedimentos</h3>
-                  <p className="text-gray-600">
-                    Registro de procedimentos para {pacienteAtual.nome}.
-                  </p>
-                </div>
-              )}
-            </div>
-            
-            {/* Rodapé da ficha */}
-            <div className="border-t border-gray-200 p-4 bg-gray-50 flex justify-between items-center">
-              <button 
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center"
-              >
-                <PenTool size={18} className="mr-2" />
-                <span>Finalizar Atendimento</span>
-              </button>
-              
-              {proximoPaciente && (
-                <div className="text-sm text-gray-600">
-                  <span className="font-medium">Próximo:</span> {proximoPaciente.nome} • 
-                  <span className={`ml-1 ${
-                    proximoPaciente.urgencia >= 4 ? 'text-red-600' : 'text-orange-600'
-                  }`}>
-                    Espera: {proximoPaciente.tempoEspera} min
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow-md p-6 text-center">
-            <h2 className="text-xl font-medium text-gray-800 mb-4">Nenhum paciente em atendimento</h2>
-            <p className="text-gray-600 mb-6">
-              Aguardando a chegada de um novo paciente ou a seleção pela recepção.
-            </p>
-            <button 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center"
-              onClick={carregarDadosSimulados}
-            >
-              <Plus size={18} className="mr-2" />
-              <span>Carregar Dados de Teste</span>
-            </button>
-          </div>
-        )}
-      </main>
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
     </div>
   );
 };

@@ -12,7 +12,7 @@ import FormularioFuncionario from './FormularioFuncionario';
 import NotificationCenter from './NotificationCenter';
 import BackupManager from './BackupManager';
 
-const InterfaceRH = () => {
+const InterfaceRH = ({ usuario, onLogout, onTrocarVisao }) => {
   // Estado de autenticação
   const [autenticado, setAutenticado] = useState(false);
   const [usuarioAtual, setUsuarioAtual] = useState(null);
@@ -558,126 +558,187 @@ const InterfaceRH = () => {
       conteudoPrincipal = <div>Carregando...</div>;
   }
   
-  return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Cabeçalho */}
-      <header className="bg-white shadow">
-        <div className="px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="bg-blue-100 p-2 rounded-full mr-3">
-              <Users className="h-6 w-6 text-blue-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">Sistema de RH</h1>
+  // Renderizar o cabeçalho com informações do usuário e opções
+  const renderCabecalho = () => {
+    if (!usuarioAtual) return null;
+
+    return (
+      <div className="cabecalho bg-white shadow-md p-4 flex justify-between items-center">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold text-purple-700 mr-4">Painel do RH</h1>
+          {usuarioAtual && (
+            <span className="text-gray-600">
+              Bem-vindo, <strong>{usuarioAtual.nome}</strong>
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-4">
+          {/* Botões de acesso a outras interfaces */}
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600">Acessar:</span>
+            
+            <button 
+              onClick={() => onTrocarVisao('paciente')}
+              className="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded"
+            >
+              Paciente
+            </button>
+            
+            {usuarioAtual.tipo === 'dentista' && (
+              <button 
+                onClick={() => onTrocarVisao('dentista')}
+                className="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded"
+              >
+                Dentista
+              </button>
+            )}
+            
+            {usuarioAtual.tipo === 'tsb' && (
+              <button 
+                onClick={() => onTrocarVisao('tsb')}
+                className="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
+              >
+                TSB
+              </button>
+            )}
           </div>
           
-          <div className="flex items-center space-x-2">
-            <NotificationCenter />
-            <button 
-              onClick={handleLogout}
-              className="flex items-center text-gray-700 hover:text-red-600"
-            >
-              <LogOut size={18} className="mr-1" />
-              <span>Sair</span>
-            </button>
-          </div>
+          {/* Botão de logout */}
+          <button 
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded flex items-center gap-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 1 1 2 0v3a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3a1 1 0 1 1-2 0V4a1 1 0 0 0-1-1H3z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M13.293 8.293a1 1 0 0 1 1.414 0L17 10.586l-2.293 2.293a1 1 0 0 1-1.414-1.414L14.586 10l-1.293-1.293a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M10 10a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2h-6a1 1 0 0 1-1-1z" clipRule="evenodd" />
+            </svg>
+            Sair
+          </button>
         </div>
-        
-        {/* Navegação */}
-        <nav className="px-4 sm:px-6 lg:px-8">
-          <div className="border-b border-gray-200">
-            <nav className="flex -mb-px">
-              <button
-                onClick={() => setAbaAtiva('funcionarios')}
-                className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                  abaAtiva === 'funcionarios'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Users size={16} className="inline mr-2" />
-                Funcionários
-              </button>
+      </div>
+    );
+  };
+  
+  return (
+    <div className="interface-rh">
+      {renderCabecalho()}
+      <div className="conteudo-principal">
+        <div className="min-h-screen bg-gray-100 flex flex-col">
+          {/* Cabeçalho */}
+          <header className="bg-white shadow">
+            <div className="px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+              <div className="flex items-center">
+                <div className="bg-blue-100 p-2 rounded-full mr-3">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
+                <h1 className="text-2xl font-bold text-gray-900">Sistema de RH</h1>
+              </div>
               
-              <button
-                onClick={() => setAbaAtiva('cadastro')}
-                className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                  abaAtiva === 'cadastro'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <UserPlus size={16} className="inline mr-2" />
-                Cadastro
-              </button>
-              
-              <button
-                onClick={() => setAbaAtiva('escalas')}
-                className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                  abaAtiva === 'escalas'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Clock size={16} className="inline mr-2" />
-                Escalas
-              </button>
-              
-              <button
-                onClick={() => setAbaAtiva('pontos')}
-                className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                  abaAtiva === 'pontos'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <CheckSquare size={16} className="inline mr-2" />
-                Pontos
-              </button>
-              
-              <button
-                onClick={() => setAbaAtiva('backup')}
-                className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                  abaAtiva === 'backup'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Archive size={16} className="inline mr-2" />
-                Backup
-              </button>
-            </nav>
-          </div>
-        </nav>
-      </header>
-      
-      {/* Conteúdo Principal */}
-      <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8">
-        {conteudoPrincipal}
-      </main>
-      
-      {/* Rodapé */}
-      <footer className="bg-white border-t border-gray-200 py-4">
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-500">
-                © 2025 Sistema Odontológico - Todos os direitos reservados
-              </p>
+              <div className="flex items-center space-x-2">
+                <NotificationCenter />
+              </div>
             </div>
             
-            <div className="flex items-center">
-              <span className="text-sm text-gray-500 mr-4">
-                Total de funcionários: <span className="font-medium">{funcionarios.length}</span>
-              </span>
-              <span className="text-sm text-gray-500">
-                Ativos: <span className="font-medium">
-                  {funcionarios.filter(f => f.status === 'ativo').length}
-                </span>
-              </span>
+            {/* Navegação */}
+            <nav className="px-4 sm:px-6 lg:px-8">
+              <div className="border-b border-gray-200">
+                <nav className="flex -mb-px">
+                  <button
+                    onClick={() => setAbaAtiva('funcionarios')}
+                    className={`py-4 px-6 font-medium text-sm border-b-2 ${
+                      abaAtiva === 'funcionarios'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <Users size={16} className="inline mr-2" />
+                    Funcionários
+                  </button>
+                  
+                  <button
+                    onClick={() => setAbaAtiva('cadastro')}
+                    className={`py-4 px-6 font-medium text-sm border-b-2 ${
+                      abaAtiva === 'cadastro'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <UserPlus size={16} className="inline mr-2" />
+                    Cadastro
+                  </button>
+                  
+                  <button
+                    onClick={() => setAbaAtiva('escalas')}
+                    className={`py-4 px-6 font-medium text-sm border-b-2 ${
+                      abaAtiva === 'escalas'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <Clock size={16} className="inline mr-2" />
+                    Escalas
+                  </button>
+                  
+                  <button
+                    onClick={() => setAbaAtiva('pontos')}
+                    className={`py-4 px-6 font-medium text-sm border-b-2 ${
+                      abaAtiva === 'pontos'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <CheckSquare size={16} className="inline mr-2" />
+                    Pontos
+                  </button>
+                  
+                  <button
+                    onClick={() => setAbaAtiva('backup')}
+                    className={`py-4 px-6 font-medium text-sm border-b-2 ${
+                      abaAtiva === 'backup'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <Archive size={16} className="inline mr-2" />
+                    Backup
+                  </button>
+                </nav>
+              </div>
+            </nav>
+          </header>
+          
+          {/* Conteúdo Principal */}
+          <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8">
+            {conteudoPrincipal}
+          </main>
+          
+          {/* Rodapé */}
+          <footer className="bg-white border-t border-gray-200 py-4">
+            <div className="px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-sm text-gray-500">
+                    © 2025 Sistema Odontológico - Todos os direitos reservados
+                  </p>
+                </div>
+                
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 mr-4">
+                    Total de funcionários: <span className="font-medium">{funcionarios.length}</span>
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    Ativos: <span className="font-medium">
+                      {funcionarios.filter(f => f.status === 'ativo').length}
+                    </span>
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
+          </footer>
         </div>
-      </footer>
+      </div>
     </div>
   );
 };

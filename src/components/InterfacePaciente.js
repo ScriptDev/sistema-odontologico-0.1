@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bell, Printer, FileText, CheckCircle, Calendar, Clock, User, Save, AlertCircle } from 'lucide-react';
 import notificationService from '../services/NotificationService';
 
-const SistemaOdontologico = () => {
+const InterfacePaciente = ({ usuario, onLogout, onTrocarVisao }) => {
   const [etapa, setEtapa] = useState(0); // Iniciar com tela de busca por CPF
   const [paciente, setPaciente] = useState({
     nome: '',
@@ -395,34 +395,77 @@ const SistemaOdontologico = () => {
     }
   }, [paciente.cep]);
 
-  return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* Cabeçalho */}
-      <header className="bg-blue-600 text-white p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-semibold">Sistema de Atendimento Odontológico</h1>
-          <div className="flex items-center space-x-4">
-            <span className="flex items-center">
-              <Clock className="mr-2" size={20} />
-              {new Date().toLocaleDateString()}
-            </span>
-            {isAdmin && (
-              <span className="bg-white text-blue-600 px-3 py-1 rounded-full font-medium">
-                Atendimentos: {contadorDiario}
-              </span>
-            )}
-            <button 
-              onClick={() => setIsAdmin(!isAdmin)} 
-              className={`px-3 py-1 rounded-full font-medium ${isAdmin ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-            >
-              {isAdmin ? 'Modo Admin' : 'Modo Paciente'}
-            </button>
-          </div>
-        </div>
-      </header>
+  // Renderizar o cabeçalho com informações do usuário e opções
+  const renderCabecalho = () => {
+    if (!usuario) return null;
 
-      {/* Conteúdo principal */}
-      <main className="container mx-auto py-8 px-4">
+    return (
+      <div className="cabecalho bg-white shadow-md p-4 flex justify-between items-center">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold text-blue-700 mr-4">Painel do Paciente</h1>
+          {usuario && (
+            <span className="text-gray-600">
+              Bem-vindo, <strong>{usuario.nome}</strong>
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-4">
+          {/* Botões de acesso a outras interfaces, exibidos apenas se o usuário tiver permissão */}
+          {usuario && (usuario.tipo === 'dentista' || usuario.tipo === 'rh' || usuario.tipo === 'tsb') && (
+            <div className="flex items-center gap-2">
+              <span className="text-gray-600">Acessar:</span>
+              
+              {usuario.tipo === 'dentista' && (
+                <button 
+                  onClick={() => onTrocarVisao('dentista')}
+                  className="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded"
+                >
+                  Dentista
+                </button>
+              )}
+              
+              {usuario.tipo === 'tsb' && (
+                <button 
+                  onClick={() => onTrocarVisao('tsb')}
+                  className="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
+                >
+                  TSB
+                </button>
+              )}
+              
+              {usuario.tipo === 'rh' && (
+                <button 
+                  onClick={() => onTrocarVisao('rh')}
+                  className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded"
+                >
+                  RH
+                </button>
+              )}
+            </div>
+          )}
+          
+          {/* Botão de logout */}
+          <button 
+            onClick={onLogout}
+            className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded flex items-center gap-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 1 1 2 0v3a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3a1 1 0 1 1-2 0V4a1 1 0 0 0-1-1H3z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M13.293 8.293a1 1 0 0 1 1.414 0L17 10.586l-2.293 2.293a1 1 0 0 1-1.414-1.414L14.586 10l-1.293-1.293a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M10 10a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2h-6a1 1 0 0 1-1-1z" clipRule="evenodd" />
+            </svg>
+            Sair
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="interface-paciente">
+      {renderCabecalho()}
+      <div className="conteudo-principal">
         {/* Indicador de progresso */}
         {etapa > 0 && (
           <div className="mb-8">
@@ -822,16 +865,9 @@ const SistemaOdontologico = () => {
             </button>
           </div>
         )}
-      </main>
-
-      {/* Rodapé */}
-      <footer className="bg-gray-100 border-t border-gray-200 py-4 mt-8">
-        <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p>© 2025 Sistema de Atendimento Odontológico - Todos os direitos reservados</p>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };
 
-export default SistemaOdontologico;
+export default InterfacePaciente;
